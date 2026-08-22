@@ -13,6 +13,10 @@ from typing import List, Optional
 
 from dataset import POSITIVE_WORDS, NEGATIVE_WORDS
 
+# Words that flip the polarity of the word right after them,
+# e.g. "not happy" should count against the score, not for it.
+NEGATION_WORDS = {"not", "no", "never"}
+
 
 class MoodAnalyzer:
     """
@@ -75,15 +79,24 @@ class MoodAnalyzer:
           - Give some words higher weights than others (for example "hate" < "annoyed")
           - Treat emojis or slang (":)", "lol", "💀") as strong signals
         """
-        # TODO: Implement this method.
-        #   1. Call self.preprocess(text) to get tokens.
-        #   2. Loop over the tokens.
-        #   3. Increase the score for positive words, decrease for negative words.
-        #   4. Return the total score.
-        #
-        # Hint: if you implement negation, you may want to look at pairs of tokens,
-        # like ("not", "happy") or ("never", "fun").
-        pass
+        tokens = self.preprocess(text)
+
+        score = 0
+        negate_next = False
+
+        for token in tokens:
+            if token in NEGATION_WORDS:
+                negate_next = True
+                continue
+
+            if token in self.positive_words:
+                score += -1 if negate_next else 1
+            elif token in self.negative_words:
+                score += 1 if negate_next else -1
+
+            negate_next = False
+
+        return score
 
     # ---------------------------------------------------------------------
     # Label prediction
@@ -105,12 +118,14 @@ class MoodAnalyzer:
         Just remember that whatever labels you return should match the labels
         you use in TRUE_LABELS in dataset.py if you care about accuracy.
         """
-        # TODO: Implement this method.
-        #   1. Call self.score_text(text) to get the numeric score.
-        #   2. Return "positive" if the score is above 0.
-        #   3. Return "negative" if the score is below 0.
-        #   4. Return "neutral" otherwise.
-        pass
+        score = self.score_text(text)
+
+        if score > 0:
+            return "positive"
+        if score < 0:
+            return "negative"
+
+        return "neutral"
 
     # ---------------------------------------------------------------------
     # Explanations (optional but recommended)

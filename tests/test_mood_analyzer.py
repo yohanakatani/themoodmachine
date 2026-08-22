@@ -1,5 +1,3 @@
-import pytest
-
 from dataset import SAMPLE_POSTS
 from mood_analyzer import MoodAnalyzer
 
@@ -23,16 +21,18 @@ def test_explain_reports_the_words_it_matched():
 
 
 def test_predict_label_runs_without_crashing_on_every_sample_post():
-    # Doesn't assert correctness: score_text/predict_label are TODOs the
-    # student fills in, so this just guards against exceptions/regressions.
     analyzer = MoodAnalyzer()
     for post in SAMPLE_POSTS:
         analyzer.predict_label(post)
 
 
-@pytest.mark.xfail(reason="score_text/predict_label TODOs not implemented yet", strict=False)
 def test_predict_label_matches_true_labels_for_easy_examples():
     analyzer = MoodAnalyzer()
     assert analyzer.predict_label("I love this class so much") == "positive"
     assert analyzer.predict_label("Today was a terrible day") == "negative"
     assert analyzer.predict_label("This is fine") == "neutral"
+
+
+def test_predict_label_handles_simple_negation():
+    analyzer = MoodAnalyzer()
+    assert analyzer.predict_label("I am not happy about this") == "negative"
