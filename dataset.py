@@ -91,3 +91,27 @@ TRUE_LABELS += [
     "neutral",   # "feeling kinda meh about this whole thing :/"
     "positive",  # "not bad at all, honestly kinda great"
 ]
+
+# More posts, skewed toward negative/neutral/mixed to balance out the
+# positive-heavy label distribution from the batch above.
+SAMPLE_POSTS += [
+    "I hate mornings but I love coffee",
+    "This job is so boring, I can't take it anymore",
+    "Ehh, nothing special happened today",
+    "I'm never going back there, it was awful",
+    "highkey done with this awful week 💀",
+    "Not gonna lie, this is actually pretty good",
+    "I guess it was fine, nothing to write home about",
+    "lol i'm dead this is hilarious 😂",
+]
+
+TRUE_LABELS += [
+    "mixed",     # "I hate mornings but I love coffee"
+    "negative",  # "This job is so boring, I can't take it anymore"
+    "neutral",   # "Ehh, nothing special happened today"
+    "negative",  # "I'm never going back there, it was awful"
+    "negative",  # "highkey done with this awful week 💀"
+    "positive",  # "Not gonna lie, this is actually pretty good"
+    "neutral",   # "I guess it was fine, nothing to write home about"
+    "positive",  # "lol i'm dead this is hilarious 😂" (slang, no sentiment words)
+]
