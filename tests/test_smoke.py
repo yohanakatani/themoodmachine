@@ -14,7 +14,10 @@ def _run_with_empty_stdin(script_name):
         input="\n",
         capture_output=True,
         text=True,
-        timeout=60,
+        # Generous on purpose: the very first "import sklearn" in a brand
+        # new virtualenv on Windows can take way longer than usual while
+        # antivirus scans the freshly installed compiled dependencies.
+        timeout=120,
     )
 
 
