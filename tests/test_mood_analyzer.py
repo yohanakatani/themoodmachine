@@ -7,6 +7,13 @@ def test_preprocess_lowercases_and_splits():
     assert analyzer.preprocess("  Great Day  ") == ["great", "day"]
 
 
+def test_score_text_counts_positive_and_negative_words():
+    analyzer = MoodAnalyzer(positive_words=["great"], negative_words=["bad"])
+    assert analyzer.score_text("this is great") == 1
+    assert analyzer.score_text("this is bad") == -1
+    assert analyzer.score_text("this is great and bad") == 0
+
+
 def test_custom_word_lists_override_the_defaults():
     analyzer = MoodAnalyzer(positive_words=["stoked"], negative_words=["meh"])
     assert "stoked" in analyzer.positive_words

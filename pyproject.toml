@@ -12,3 +12,11 @@ select = ["E4", "E7", "E9", "F"]
 # a package, so add it to sys.path for `from dataset import ...` imports.
 pythonpath = ["."]
 testpaths = ["tests"]
+
+[tool.coverage.run]
+# Only report coverage for source files, not the test files themselves.
+# main.py/ml_experiments.py are only exercised via test_smoke.py, which
+# runs them in a subprocess -- coverage.py can't see across that process
+# boundary, so they'll always show 0% here even though they're tested.
+# That's a known, accepted gap in this report, not a real one.
+omit = ["tests/*"]
