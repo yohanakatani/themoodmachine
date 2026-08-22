@@ -36,3 +36,13 @@ def test_predict_label_matches_true_labels_for_easy_examples():
 def test_predict_label_handles_simple_negation():
     analyzer = MoodAnalyzer()
     assert analyzer.predict_label("I am not happy about this") == "negative"
+
+
+def test_predict_label_returns_mixed_for_colliding_signals():
+    analyzer = MoodAnalyzer(positive_words=["proud"], negative_words=["stressed"])
+    assert analyzer.predict_label("proud but stressed") == "mixed"
+
+
+def test_predict_label_returns_neutral_when_no_sentiment_words_hit():
+    analyzer = MoodAnalyzer()
+    assert analyzer.predict_label("This is fine") == "neutral"

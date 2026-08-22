@@ -139,24 +139,26 @@ class MoodAnalyzer:
         """
         Turn the numeric score for a piece of text into a mood label.
 
-        The default mapping is:
-          - score > 0  -> "positive"
-          - score < 0  -> "negative"
-          - score == 0 -> "neutral"
+        The mapping is:
+          - score > 0                              -> "positive"
+          - score < 0                               -> "negative"
+          - score == 0, with no sentiment words hit -> "neutral"
+          - score == 0, with hits on both sides     -> "mixed"
 
-        TODO: You can adjust this mapping if it makes sense for your model.
-        For example:
-          - Use different thresholds (for example score >= 2 to be "positive")
-          - Add a "mixed" label for scores close to zero
-        Just remember that whatever labels you return should match the labels
-        you use in TRUE_LABELS in dataset.py if you care about accuracy.
+        A score of 0 doesn't always mean the text is neutral: "proud but
+        stressed" and "This is fine" both net to 0, but the first has
+        real, conflicting signal while the second has none at all. Only
+        the former should count as "mixed".
         """
-        score = self.score_text(text)
+        score, positive_hits, negative_hits = self._score_tokens(self.preprocess(text))
 
         if score > 0:
             return "positive"
         if score < 0:
             return "negative"
+
+        if positive_hits and negative_hits:
+            return "mixed"
 
         return "neutral"
 
