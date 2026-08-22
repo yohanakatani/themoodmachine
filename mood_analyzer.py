@@ -9,7 +9,7 @@ This class starts with very simple logic:
   - Convert that score into a mood label
 """
 
-from typing import List, Dict, Tuple, Optional
+from typing import List, Optional
 
 from dataset import POSITIVE_WORDS, NEGATIVE_WORDS
 
