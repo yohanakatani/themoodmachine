@@ -36,6 +36,8 @@ class MoodAnalyzer:
         self,
         positive_words: Optional[List[str]] = None,
         negative_words: Optional[List[str]] = None,
+        positive_threshold: int = 1,
+        negative_threshold: int = -1,
     ) -> None:
         # Use the default lists from dataset.py if none are provided.
         positive_words = positive_words if positive_words is not None else POSITIVE_WORDS
@@ -44,6 +46,14 @@ class MoodAnalyzer:
         # Store as sets for faster lookup.
         self.positive_words = set(w.lower() for w in positive_words)
         self.negative_words = set(w.lower() for w in negative_words)
+
+        # A score at or above positive_threshold (resp. at or below
+        # negative_threshold) is what counts as "positive" (resp.
+        # "negative") in predict_label(). Defaults match the original
+        # score > 0 / score < 0 mapping; raise them (e.g. threshold=2) to
+        # require stronger signal before committing to a label.
+        self.positive_threshold = positive_threshold
+        self.negative_threshold = negative_threshold
 
     # ---------------------------------------------------------------------
     # Preprocessing
@@ -140,21 +150,27 @@ class MoodAnalyzer:
         Turn the numeric score for a piece of text into a mood label.
 
         The mapping is:
-          - score > 0                              -> "positive"
-          - score < 0                               -> "negative"
-          - score == 0, with no sentiment words hit -> "neutral"
-          - score == 0, with hits on both sides     -> "mixed"
+          - score >= positive_threshold                  -> "positive"
+          - score <= negative_threshold                   -> "negative"
+          - otherwise, with no sentiment words hit        -> "neutral"
+          - otherwise, with hits on both sides             -> "mixed"
 
-        A score of 0 doesn't always mean the text is neutral: "proud but
-        stressed" and "This is fine" both net to 0, but the first has
+        positive_threshold/negative_threshold default to 1/-1 (equivalent
+        to the original score > 0 / score < 0 mapping), but can be raised
+        to require stronger signal, e.g. MoodAnalyzer(positive_threshold=2)
+        only calls something "positive" once at least two positive words
+        (net of any negation) outweigh the negatives.
+
+        A borderline score doesn't always mean the text is neutral: "proud
+        but stressed" and "This is fine" both net to 0, but the first has
         real, conflicting signal while the second has none at all. Only
         the former should count as "mixed".
         """
         score, positive_hits, negative_hits = self._score_tokens(self.preprocess(text))
 
-        if score > 0:
+        if score >= self.positive_threshold:
             return "positive"
-        if score < 0:
+        if score <= self.negative_threshold:
             return "negative"
 
         if positive_hits and negative_hits:

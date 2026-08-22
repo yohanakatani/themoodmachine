@@ -46,3 +46,13 @@ def test_predict_label_returns_mixed_for_colliding_signals():
 def test_predict_label_returns_neutral_when_no_sentiment_words_hit():
     analyzer = MoodAnalyzer()
     assert analyzer.predict_label("This is fine") == "neutral"
+
+
+def test_predict_label_threshold_is_configurable():
+    text = "I love this class so much"  # score = 1
+
+    lenient = MoodAnalyzer(positive_threshold=1)
+    strict = MoodAnalyzer(positive_threshold=2)
+
+    assert lenient.predict_label(text) == "positive"
+    assert strict.predict_label(text) == "neutral"
