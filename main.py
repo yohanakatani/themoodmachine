@@ -2,6 +2,7 @@
 Entry point for the Mood Machine rule based mood analyzer.
 """
 
+import sys
 from typing import List
 
 from mood_analyzer import MoodAnalyzer
@@ -83,6 +84,10 @@ def run_interactive_loop() -> None:
 
 
 if __name__ == "__main__":
+    # SAMPLE_POSTS contains emojis; force UTF-8 so this doesn't crash on
+    # Windows terminals that default to a legacy codepage like cp1252.
+    sys.stdout.reconfigure(encoding="utf-8")
+
     evaluate_rule_based(SAMPLE_POSTS, TRUE_LABELS)
 
     run_batch_demo()

@@ -67,28 +67,25 @@ TRUE_LABELS = [
     "negative",  # "I am not happy about this"
 ]
 
-# TODO: Add 5-10 more posts and labels.
-#
-# Requirements:
-#   - For every new post you add to SAMPLE_POSTS, you must add one
-#     matching label to TRUE_LABELS.
-#   - SAMPLE_POSTS and TRUE_LABELS must always have the same length.
-#   - Include a variety of language styles, such as:
-#       * Slang ("lowkey", "highkey", "no cap")
-#       * Emojis (":)", ":(", "🥲", "😂", "💀")
-#       * Sarcasm ("I absolutely love getting stuck in traffic")
-#       * Ambiguous or mixed feelings
-#
-# Tips:
-#   - Try to create some examples that are hard to label even for you.
-#   - Make a note of any examples that you and a friend might disagree on.
-#     Those "edge cases" are interesting to inspect for both the rule based
-#     and ML models.
-#
-# Example of how you might extend the lists:
-#
-# SAMPLE_POSTS.append("Lowkey stressed but kind of proud of myself")
-# TRUE_LABELS.append("mixed")
-#
-# Remember to keep them aligned:
-#   len(SAMPLE_POSTS) == len(TRUE_LABELS)
+# Additional posts covering slang, emojis, sarcasm, and mixed feelings.
+SAMPLE_POSTS += [
+    "no cap this is the best day ever",
+    "I'm lowkey stressed but kind of proud of myself",
+    "I absolutely love getting stuck in traffic",
+    "ugh today was rough but at least it's over now 🥲",
+    "so happy right now 😂😂😂",
+    "highkey excited for the concert tonight",
+    "feeling kinda meh about this whole thing :/",
+    "not bad at all, honestly kinda great",
+]
+
+TRUE_LABELS += [
+    "positive",  # "no cap this is the best day ever"
+    "mixed",     # "I'm lowkey stressed but kind of proud of myself"
+    "negative",  # "I absolutely love getting stuck in traffic" (sarcasm)
+    "mixed",     # "ugh today was rough but at least it's over now 🥲"
+    "positive",  # "so happy right now 😂😂😂"
+    "positive",  # "highkey excited for the concert tonight"
+    "neutral",   # "feeling kinda meh about this whole thing :/"
+    "positive",  # "not bad at all, honestly kinda great"
+]

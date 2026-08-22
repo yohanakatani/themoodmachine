@@ -7,6 +7,7 @@ to train a tiny text classifier on the same SAMPLE_POSTS and
 TRUE_LABELS that you use with the rule based model.
 """
 
+import sys
 from typing import List, Tuple
 
 from sklearn.feature_extraction.text import CountVectorizer
@@ -122,6 +123,10 @@ def run_interactive_loop(
 
 
 if __name__ == "__main__":
+    # SAMPLE_POSTS contains emojis; force UTF-8 so this doesn't crash on
+    # Windows terminals that default to a legacy codepage like cp1252.
+    sys.stdout.reconfigure(encoding="utf-8")
+
     print("Training an ML model on SAMPLE_POSTS and TRUE_LABELS from dataset.py...")
     print("Make sure you have added enough labeled examples before running this.\n")
 
